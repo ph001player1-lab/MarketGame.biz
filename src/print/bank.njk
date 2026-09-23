@@ -1,0 +1,62 @@
+---
+layout: layouts/print.njk
+permalink: /print/bank/
+title: "Bank partner brief — Market Game"
+fields: '<label>Bank name <input type="text" data-input="sponsor" placeholder="Your bank"></label>'
+---
+{% set P = pricing.packages %}
+{% set O = pricing.options %}
+{% set B = pricing.bank %}
+{% set reachLo = B.participantsPerGame[0] * P.annual.games %}
+{% set reachHi = B.participantsPerGame[1] * P.annual.games %}
+<header class="doc__head">
+  <p class="doc__brand">Market <em>Game</em></p>
+  <p class="doc__kind">Bank partner brief<span data-show-if="sponsor"> for <b data-fill="sponsor"></b></span></p>
+</header>
+
+<h1 class="doc__title">Put your bank in the game</h1>
+<p class="doc__lede">Market Game brings local business owners together at their chamber of commerce every month for a hands-on business simulation. Teams run competing companies in one market, and sooner or later every team needs a loan. Your bank can be the one that gives it — on screen and in the room.</p>
+
+<div class="doc__cols">
+  <section>
+    <h2>What your bank gets</h2>
+    <ul>
+      <li><b>Your brand on the loan inside the game</b> and your name on the screens.</li>
+      <li><b>Your own host</b> in the room after certification ({{ O.hostCertification | usd }} per person).</li>
+      <li><b>"Presented by"</b> in the chamber's invitations and on certificates.</li>
+      <li><b>Opt-in contacts</b> of participants.</li>
+      <li><b>Reports</b> after every game; quarterly reviews for exclusive partners.</li>
+      <li><b>CRA:</b> may qualify as a community development service; your CRA officer decides.</li>
+    </ul>
+    <p class="doc__small">Loan terms in the game are the game's own; nothing on screen is a credit offer.</p>
+  </section>
+  <section>
+    <h2>Pricing</h2>
+    <table class="doc__table doc__table--price">
+      <tr><th>Demo game for your team</th><td>Free</td></tr>
+      <tr><th>One sponsored game</th><td>{{ P.signature.price | usd }}</td></tr>
+      <tr><th>12 games in one chamber</th><td>{{ P.annual.price | usd }} a year</td></tr>
+      <tr><th>From {{ B.volumeFrom }} chambers</th><td>{{ B.volumePrice | usd }} per chamber a year</td></tr>
+      <tr><th>Exclusive: metro area</th><td>from {{ B.exclusiveMetroFrom }} chambers</td></tr>
+      <tr><th>Exclusive: state</th><td>from {{ B.exclusiveStateFrom }} chambers</td></tr>
+    </table>
+    <p>At {{ B.participantsPerGame[0] }}–{{ B.participantsPerGame[1] }} participants per game, {{ P.annual.price | usd }} reaches <b>{{ reachLo }}–{{ reachHi }} business owners a year</b> — about {{ (P.annual.price / reachHi) | round | usd }}–{{ (P.annual.price / reachLo) | round | usd }} per personal contact.</p>
+  </section>
+</div>
+
+<section>
+  <h2>Exclusive Banking Partner</h2>
+  <p>The only lender in our games in your territory, the first right to sponsor every new chamber there, a dedicated manager, quarterly reviews, CRA reports and host certification included ({{ B.hostsIncludedMetro }} people for a metro area, {{ B.hostsIncludedState }} for a state).</p>
+</section>
+
+<section class="doc__state" data-show-if="state">
+  <h2>In <span data-fill="stateName"></span></h2>
+  <ul class="doc__facts">
+    <li><span>Banking partner</span><b data-fill="bank"></b></li>
+    <li><span>Programs running</span><b data-fill="active"></b></li>
+  </ul>
+</section>
+
+<footer class="doc__foot">
+  <p><b>Next step:</b> a free 60-minute demo game for your team. Request it at <b>{{ site.url | replace("https://", "") }}/banks/</b></p>
+</footer>

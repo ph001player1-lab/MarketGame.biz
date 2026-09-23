@@ -1,0 +1,57 @@
+---
+permalink: /llms.txt
+eleventyExcludeFromCollections: true
+---
+{% set P = pricing.packages %}{% set O = pricing.options %}{% set B = pricing.bank %}{% set F = pricing.formats -%}
+# Market Game
+
+> Monthly, hands-on business simulation programs for chambers of commerce
+> in the United States and internationally. Local business owners run
+> competing companies in one shared market. Paid by the chamber or by a
+> sponsor such as a bank. Free 60-minute demo game.
+
+Market Game is built on {{ site.game.name }}, a team business simulation
+created by {{ site.author.name }}. The game itself is described at
+{{ site.game.url }}.
+
+## Format
+
+Participants sit in the chamber's room; the host joins by video on a big
+screen. A bank or sponsor representative can be certified to host in person.
+Each game is played in one of three formats:
+
+{% for key, f in F %}- {{ f.name }} — {{ f.who | lower }}; {{ f.months }} game months, {{ f.hours }} hours; suggested ticket {{ f.ticket | usd }} per team.
+{% endfor %}
+Tickets are sold by the chamber, and the money stays with the chamber.
+
+## Packages
+
+The price is the same whether the chamber or a sponsor pays.
+
+- Demo game — free, 60 minutes online.
+- Pilot — {{ P.pilot.price | usd }}, one game. Founding Chamber of a state (the first chamber in the state to sign up): {{ pricing.foundingPilot | usd }}.
+- Signature Event — {{ P.signature.price | usd }}, one game with branding, sponsor package, certificates and a board report.
+- Annual Program — {{ P.annual.price | usd }} a year, {{ P.annual.games }} games (one a month), {{ P.annual.perGame | usd }} per game, billed monthly.
+
+Options: in-person host +{{ O.inPerson | usd }} per game plus travel;
+Spanish-language game +{{ O.spanish | usd }}; Elite format +{{ O.elite | usd }};
+extra game {{ O.extraGame | usd }}; certification of a sponsor's own host
+{{ O.hostCertification | usd }} per person.
+
+## Banks and sponsors
+
+Banks sponsor games at chambers: the loan inside the game carries the bank's
+name, the bank's certified representative can host, participants may opt in
+to be contacted. {{ P.annual.price | usd }} per chamber a year;
+{{ B.volumePrice | usd }} per chamber from {{ B.volumeFrom }} chambers.
+Exclusive Banking Partner: from {{ B.exclusiveMetroFrom }} chambers in a metro area
+or {{ B.exclusiveStateFrom }} in a state. The activity may qualify for CRA
+community development credit; the bank's CRA officer decides.
+
+## Pages
+
+- {{ site.url }}/ — main page, choose your state
+- {{ site.url }}/nationwide/ — organizations working across state lines
+- {{ site.url }}/international/ — communities that trade across borders
+- {{ site.url }}/banks/ — for banks and sponsors
+- {{ site.url }}/privacy/ — privacy policy

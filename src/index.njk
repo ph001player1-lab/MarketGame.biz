@@ -1,0 +1,37 @@
+---
+layout: layouts/base.njk
+permalink: /
+pageKind: home
+hasPrograms: true
+title: "Market Game — a monthly business game for chambers of commerce"
+ogTitle: "Run a business. Compete in a market. Learn by doing."
+description: "A hands-on business simulation for chambers of commerce, paid by the chamber or by a sponsor. Local business owners compete in one shared market, every month. Free 60-minute demo game."
+---
+<section class="hero hero--home">
+  <div class="wrap hero__in">
+    <div class="hero__text">
+      <span class="eyebrow">Business simulation for chambers of commerce</span>
+      <h1>Run a business. Compete in a market. <span>Learn by doing.</span></h1>
+      <p class="lede">Market Game brings a monthly, hands-on business game to your chamber. Local business owners run competing companies in one shared market and see how price, marketing, capacity and cash decide who wins. Paid by your chamber — or by a sponsor.</p>
+      <div class="btns">
+        <button type="button" class="btn" data-lead="">Request a demo game</button>
+        <a class="btn btn--line" href="#programs">See programs</a>
+      </div>
+      <p class="undercta">Free 60-minute demo for your board or your team. A manager agrees on the time with you.</p>
+    </div>
+    {% include "partials/selector.njk" %}
+  </div>
+</section>
+
+<div class="flow">
+{% include "partials/map.njk" %}
+{% include "partials/benefits.njk" %}
+{% include "partials/experience.njk" %}
+{% include "partials/programs.njk" %}
+{% include "partials/calculator.njk" %}
+{% include "partials/banks.njk" %}
+{% include "partials/how.njk" %}
+{% include "partials/about.njk" %}
+{% include "partials/faq.njk" %}
+</div>
+{% include "partials/cta.njk" %}

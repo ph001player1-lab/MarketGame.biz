@@ -1,0 +1,40 @@
+{# Карта штатов плиткой: каждая клетка — ссылка на страницу штата.
+   Цвет клетки берётся из базы палат при сборке; подсветку часового пояса
+   посетителя добавляет selector.js. #}
+<section class="sect sect--tint" id="states" aria-labelledby="statesTitle">
+  <div class="wrap">
+    <span class="eyebrow">Choose your state</span>
+    <h2 id="statesTitle">Be the Founding Chamber of your state</h2>
+    <p class="lede">The first chamber in each state to sign up becomes its Founding Chamber: a pilot game for {{ pricing.foundingPilot | usd }} instead of {{ pricing.packages.pilot.price | usd }} and a permanent place on the state page.</p>
+
+    <div class="mapwrap">
+    <div class="map" data-map>
+      {% for s in states %}{% set i = stateInfo[s.abbr] %}
+      <a class="tile{% if i.active %} tile--active{% endif %}{% if i.founding.taken %} tile--founded{% endif %}{% if i.bank.status != 'open' %} tile--bank{% endif %}"
+         href="/{{ s.slug }}/" style="grid-row:{{ s.tile[0] + 1 }};grid-column:{{ s.tile[1] + 1 }}"
+         data-state="{{ s.abbr }}" data-group="{{ s.group }}"
+         aria-label="{{ s.name }}{% if i.active %}: program running{% elif not i.founding.taken %}: Founding Chamber spot open{% endif %}{% if i.bank.status != 'open' %}, banking partner in place{% endif %}"
+         title="{{ s.name }}">{{ s.abbr }}</a>
+      {% endfor %}
+    </div>
+
+    <div class="mapside">
+    <p class="map__note" data-map-note hidden></p>
+    <ul class="legend">
+      <li><i class="legend__sw"></i>Founding Chamber spot open</li>
+      <li><i class="legend__sw legend__sw--active"></i>Program running</li>
+      <li><i class="legend__sw legend__sw--bank"></i>Banking partner in place</li>
+      <li data-legend-zone hidden><i class="legend__sw legend__sw--zone"></i>Your time zone</li>
+    </ul>
+
+    <div class="beyond">
+      <p class="beyond__t">Members do business beyond one state?</p>
+      <div class="btns">
+        <a class="btn btn--line" href="/nationwide/" data-scope-link="us">Across the U.S.</a>
+        <a class="btn btn--line" href="/international/" data-scope-link="intl">Internationally</a>
+      </div>
+    </div>
+    </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,37 @@
+{
+  "packages": {
+    "demo":      { "name": "Demo game",       "price": 0,     "games": 1 },
+    "pilot":     { "name": "Pilot",           "price": 1500,  "games": 1 },
+    "signature": { "name": "Signature Event", "price": 3000,  "games": 1 },
+    "annual":    { "name": "Annual Program",  "price": 18000, "games": 12, "perGame": 1500 }
+  },
+
+  "bank": {
+    "volumeFrom": 5,
+    "volumePrice": 15000,
+    "volumePerGame": 1250,
+    "exclusiveMetroFrom": 3,
+    "exclusiveStateFrom": 10,
+    "hostsIncludedMetro": 2,
+    "hostsIncludedState": 5,
+    "participantsPerGame": [15, 20]
+  },
+
+  "options": {
+    "inPerson": 1000,
+    "spanish": 500,
+    "elite": 1500,
+    "extraGame": 1500,
+    "extraGameVolume": 1250,
+    "hostCertification": 2500
+  },
+
+  "formats": {
+    "start":  { "name": "Start",  "who": "People about to start a business",       "months": 12, "hours": 2,   "ticket": 25 },
+    "growth": { "name": "Growth", "who": "Owners of a running business",           "months": 24, "hours": 2.5, "ticket": 100 },
+    "elite":  { "name": "Elite",  "who": "Executives and management teams",        "months": 36, "hours": 4,   "ticket": 3000 }
+  },
+
+  "foundingPilot": 750,
+  "pilotCreditDays": 90
+}

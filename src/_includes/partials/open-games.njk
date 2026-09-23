@@ -1,0 +1,21 @@
+{# Открытые игры: одна в месяц в каждом штате, по местному времени.
+   Даты считает assets/js/schedule.js по правилам из states.json;
+   здесь — то же правило словами, на случай без JavaScript. #}
+{% set fmt = pricing.formats[schedule.format] %}
+<section class="sect sect--dark" id="open-games" aria-labelledby="ogTitle">
+  <div class="wrap">
+    <span class="eyebrow">Open games</span>
+    {% if state %}
+    <h2 id="ogTitle">Open games in {{ state.name }}</h2>
+    <p class="lede">Once a month we run an open online game on {{ state.name }} time. Anyone can join — an easy way for your staff, your board or your members to try the game. Your chamber's own games follow your own schedule.</p>
+    <p class="games__rule">{{ state.game | gameRule }}, {{ stateInfo[state.abbr].zone }}.</p>
+    {% else %}
+    <h2 id="ogTitle">Open games across the U.S.</h2>
+    <p class="lede">Every state has its own open online game once a month, on local time. Teams from any state can join any game — a market where nobody plays on home turf.</p>
+    {% endif %}
+
+    <div class="games" data-open-games="{{ state.abbr if state else 'all' }}" data-limit="{{ 3 if state else 8 }}"></div>
+
+    <p class="games__note">Hosted online in English. Format: {{ fmt.name }} — {{ fmt.who | lower }}, {{ fmt.ticket | usd }} per team, {{ schedule.hours | hours }}. You register on <a href="{{ site.game.url }}">marketgame.club</a>.</p>
+  </div>
+</section>

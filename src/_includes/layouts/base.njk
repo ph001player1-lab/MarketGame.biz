@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+<meta name="description" content="{{ description or site.description }}">
+{% if noindex or (state and not stateInfo[state.abbr].indexable) %}<meta name="robots" content="noindex, follow">
+{% endif %}<link rel="canonical" href="{{ site.url }}{{ page.url }}">
+<meta name="theme-color" content="#F2F1EC">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.brand }}">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="{{ ogTitle or title }}">
+<meta property="og:description" content="{{ description or site.description }}">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta name="twitter:card" content="summary">
+
+<link rel="preload" href="/assets/fonts/Unbounded.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+
+<script type="application/ld+json">
+{{ {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": site.brand,
+  "url": site.url,
+  "logo": site.url + "/favicon.svg",
+  "description": site.description
+} | jsonScript | safe }}
+</script>
+<script id="mg-data" type="application/json">{{ client | jsonScript | safe }}</script>
+</head>
+<body data-page="{{ pageKind or 'page' }}"{% if state %} data-state="{{ state.abbr }}"{% endif %}>
+<a class="skip" href="#main">Skip to content</a>
+
+{% include "partials/header.njk" %}
+
+<main id="main">
+{{ content | safe }}
+</main>
+
+{% include "partials/footer.njk" %}
+
+<script src="/assets/js/core.js" defer></script>
+<script src="/assets/js/selector.js" defer></script>
+<script src="/assets/js/schedule.js" defer></script>
+<script src="/assets/js/calc.js" defer></script>
+<script src="/assets/js/lists.js" defer></script>
+<script src="/assets/js/forms.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+---
+layout: layouts/print.njk
+permalink: /print/brief/
+title: "Program brief — Market Game"
+fields: '<label>Chamber name <input type="text" data-input="chamber" placeholder="e.g. Greater Springfield Chamber"></label>'
+---
+{% set P = pricing.packages %}
+{% set O = pricing.options %}
+{% set F = pricing.formats %}
+<header class="doc__head">
+  <p class="doc__brand">Market <em>Game</em></p>
+  <p class="doc__kind">Program brief<span data-show-if="chamber"> for <b data-fill="chamber"></b></span><span data-show-if="state"> · <span data-fill="stateName"></span></span></p>
+</header>
+
+<h1 class="doc__title">A monthly business game for our members</h1>
+<p class="doc__lede">Market Game is a hands-on business simulation. Local business owners run competing companies in one shared market and see how price, marketing, capacity and cash decide who wins. The game runs in our room once a month; the host joins by video on the big screen.</p>
+
+<div class="doc__cols">
+  <section>
+    <h2>Why it fits our chamber</h2>
+    <ul>
+      <li><b>Engagement.</b> A monthly event members look forward to: they make decisions and compete, instead of listening to a lecture.</li>
+      <li><b>Non-dues revenue.</b> We sell the tickets and keep the money.</li>
+      <li><b>Sponsorship.</b> A bank or another sponsor can pay for the program; it is then free for the chamber.</li>
+      <li><b>Networking with substance.</b> Competing for the same customers tells members more about each other than a mixer.</li>
+      <li><b>Turnkey.</b> We provide the room; Market Game provides the host, invitation texts and a report after every game.</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Formats and suggested tickets</h2>
+    <table class="doc__table">
+      {% for key, f in F %}
+      <tr><th>{{ f.name }}</th><td>{{ f.who }}<br><small>{{ f.months }} game months · {{ f.hours }} hours</small></td><td>{{ f.ticket | usd }} per team</td></tr>
+      {% endfor %}
+    </table>
+    <p class="doc__small">Four to twenty teams per game; a team can be one person or several. Member discounts apply as usual.</p>
+  </section>
+</div>
+
+<section>
+  <h2>Packages</h2>
+  <table class="doc__table doc__table--price">
+    <tr><th>Demo game</th><td>60 minutes online for the board or staff</td><td>Free</td></tr>
+    <tr><th>Pilot</th><td>One game; credited toward the Annual Program if signed within {{ pricing.pilotCreditDays }} days<span data-show-if="founding-open">. Founding Chamber price: {{ pricing.foundingPilot | usd }}</span></td><td>{{ P.pilot.price | usd }}</td></tr>
+    <tr><th>Signature Event</th><td>One game with branding, sponsor package, certificates and a board report</td><td>{{ P.signature.price | usd }}</td></tr>
+    <tr><th>Annual Program</th><td>{{ P.annual.games }} games, one a month; {{ P.annual.perGame | usd }} per game, billed monthly</td><td>{{ P.annual.price | usd }} a year</td></tr>
+  </table>
+  <p class="doc__small">Options: in-person host +{{ O.inPerson | usd }} per game plus travel · Spanish-language game +{{ O.spanish | usd }} · Elite format +{{ O.elite | usd }} · extra game {{ O.extraGame | usd }}. The price is the same whether the chamber or a sponsor pays; with a sponsor, the chamber signs the 12-game agreement and provides the room and the participants.</p>
+</section>
+
+<section class="doc__state" data-show-if="state">
+  <h2>In <span data-fill="stateName"></span></h2>
+  <ul class="doc__facts">
+    <li><span>Time zone</span><b data-fill="zone"></b></li>
+    <li><span>Founding Chamber spot</span><b data-fill="founding"></b></li>
+    <li><span>Banking partner</span><b data-fill="bank"></b></li>
+  </ul>
+</section>
+
+<footer class="doc__foot">
+  <p><b>Next step:</b> a free 60-minute demo game for the board. Request it at <b>{{ site.url | replace("https://", "") }}</b><span data-show-if="state">/<span data-fill="stateSlug"></span>/</span></p>
+</footer>

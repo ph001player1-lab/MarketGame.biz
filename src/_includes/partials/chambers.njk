@@ -1,0 +1,54 @@
+{# Все палаты штата со статусами. Список приходит из таблицы продаж
+   (src/_data/chambers.json, его пишет scripts/sync-sheet.mjs).
+   Поиск по списку — assets/js/lists.js. #}
+{% set info = stateInfo[state.abbr] %}
+{% set claim = "Founding Chamber claim — " + state.name %}
+<section class="sect" id="chambers" aria-labelledby="chTitle">
+  <div class="wrap">
+    <span class="eyebrow">Chambers of commerce in {{ state.name }}</span>
+    {% if info.founding.taken %}
+    <h2 id="chTitle">Join the chambers already playing</h2>
+    <p class="lede">{% if info.founding.name %}{{ info.founding.name }} is the Founding Chamber of {{ state.name }}. {% endif %}Find your chamber below and request a demo game for your board.</p>
+    {% else %}
+    <h2 id="chTitle">The Founding Chamber spot in {{ state.name }} is open</h2>
+    <p class="lede">The first chamber in {{ state.name }} to sign up gets a pilot game for {{ pricing.foundingPilot | usd }} instead of {{ pricing.packages.pilot.price | usd }} and a permanent place on this page.</p>
+    {% endif %}
+
+    {% if info.chambers.length %}
+    <div class="chlist" data-chlist>
+      <label class="chlist__search">
+        <span>Find your chamber</span>
+        <input type="search" placeholder="Chamber name or city" autocomplete="off" data-chlist-search>
+      </label>
+      <p class="chlist__count" data-chlist-count>{{ info.chambers.length }} chambers</p>
+      <ul class="chlist__items">
+        {% for c in info.chambers %}
+        <li class="ch" data-find="{{ c.name | lower }} {{ (c.city or '') | lower }}">
+          <div class="ch__main">
+            <b>{% if c.url %}<a href="{{ c.url }}" rel="nofollow noopener">{{ c.name }}</a>{% else %}{{ c.name }}{% endif %}</b>
+            {% if c.city %}<span>{{ c.city }}</span>{% endif %}
+          </div>
+          {% if c.status == 'founding' %}<span class="badge badge--founding">Founding Chamber</span>
+          {% elif c.status == 'active' %}<span class="badge badge--active">{% if c.sponsor %}Sponsored by {{ c.sponsor }}{% else %}Program running{% endif %}</span>
+          {% elif c.status == 'private' %}{# договор есть, но палата не разрешила упоминать статус #}
+          {% else %}<button type="button" class="badge badge--open" data-lead="chamber" data-lead-org="{{ c.name }}" data-lead-note="{{ claim if not info.founding.taken else '' }}">{{ 'Claim Founding status' if not info.founding.taken else 'Request a demo' }}</button>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      <p class="chlist__none" data-chlist-none hidden>No chamber matches. <button type="button" class="link" data-lead="chamber" data-lead-note="Add my chamber to the {{ state.name }} list">Add yours</button></p>
+    </div>
+    {% else %}
+    <div class="empty">
+      <p>We're compiling the list of chambers in {{ state.name }}. You don't have to wait for it: {% if info.founding.taken %}request a demo game for your board today.{% else %}claim the Founding Chamber spot today — we'll set up a demo game for your board first.{% endif %}</p>
+      <div class="btns">
+        {% if info.founding.taken %}
+        <button type="button" class="btn" data-lead="chamber">Request a demo game</button>
+        {% else %}
+        <button type="button" class="btn" data-lead="chamber" data-lead-note="{{ claim }}">Claim Founding status</button>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+    <p class="chlist__add">Is your chamber missing? <button type="button" class="link" data-lead="chamber" data-lead-note="Add my chamber to the {{ state.name }} list">Add it</button></p>
+  </div>
+</section>

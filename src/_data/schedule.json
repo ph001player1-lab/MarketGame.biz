@@ -1,0 +1,6 @@
+{
+  "format": "growth",
+  "hours": 2.5,
+  "horizonDays": 100,
+  "exceptions": []
+}

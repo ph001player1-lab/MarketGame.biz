@@ -1,0 +1,212 @@
+---
+layout: layouts/base.njk
+permalink: /banks/
+pageKind: banks
+hasPrograms: false
+title: "Market Game for banks and sponsors — put your bank in the game"
+ogTitle: "Put your bank in the game"
+description: "Sponsor monthly business games at chambers of commerce: your brand on the loan inside the game, your certified host in the room, opt-in contacts of local business owners. Exclusive territories available."
+---
+{% set B = pricing.bank %}
+{% set P = pricing.packages %}
+{% set O = pricing.options %}
+{% set reachLo = B.participantsPerGame[0] * P.annual.games %}
+{% set reachHi = B.participantsPerGame[1] * P.annual.games %}
+<section class="hero">
+  <div class="wrap hero__in">
+    <div class="hero__text">
+      <span class="eyebrow">For banks, credit unions and sponsors</span>
+      <h1>Put your bank <span>in the game</span></h1>
+      <p class="lede">Market Game brings local business owners together at their chamber of commerce every month. Sooner or later, every team needs a loan — and your bank can be the one that gives it: on screen and in the room.</p>
+      <div class="btns">
+        <button type="button" class="btn" data-lead="bank">Request a demo for your team</button>
+        <a class="btn btn--line" href="#availability">See availability by state</a>
+      </div>
+      <p class="undercta">Free 60-minute demo game for your business banking, marketing or CRA team.</p>
+    </div>
+    {% include "partials/selector.njk" %}
+  </div>
+</section>
+
+<section class="sect" id="gets" aria-labelledby="getsTitle">
+  <div class="wrap">
+    <span class="eyebrow">What your bank gets</span>
+    <h2 id="getsTitle">Face time with local business owners, every month</h2>
+    <div class="cards cards--3">
+      <article class="card">
+        <span class="card__tag">In the game</span>
+        <h3>Your brand on the loan</h3>
+        <p>When a team runs short of cash and borrows, the loan carries your bank's name. Your name is on the screens for the whole game.</p>
+      </article>
+      <article class="card">
+        <span class="card__tag">In the room</span>
+        <h3>Your own host</h3>
+        <p>Your certified representative hosts the game in person — two hours of personal contact with business owners, not a booth at the back.</p>
+      </article>
+      <article class="card">
+        <span class="card__tag">In the invitations</span>
+        <h3>"Presented by"</h3>
+        <p>Your name in the chamber's invitations, on the registration page and on participant certificates.</p>
+      </article>
+      <article class="card">
+        <span class="card__tag">Contacts</span>
+        <h3>Opt-in leads</h3>
+        <p>Contacts of participants who agree to hear from you when they register. Nobody is added without consent.</p>
+      </article>
+      <article class="card">
+        <span class="card__tag">Reports</span>
+        <h3>A report after every game</h3>
+        <p>Who played, which businesses took part and what they took away — plus quarterly reviews for exclusive partners.</p>
+      </article>
+      <article class="card">
+        <span class="card__tag">CRA</span>
+        <h3>May qualify for CRA</h3>
+        <p>When your staff provide financial education to small businesses, the activity may qualify as a community development service. Your CRA officer decides.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sect sect--tint" id="host" aria-labelledby="hostTitle">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Your own host</span>
+      <h2 id="hostTitle">Your banker runs the room</h2>
+    </div>
+    <div class="prose">
+      <p class="lede">By default our host joins by video on the chamber's big screen. Many banks prefer to put their own person in front of the room.</p>
+      <ul class="ticks">
+        <li>Certification: {{ O.hostCertification | usd }} per person — training plus two games next to our host</li>
+        <li>After that your representative hosts in person, and our team runs the game in the background by video</li>
+        <li>Included in exclusive partnerships: {{ B.hostsIncludedMetro }} hosts for a metro area, {{ B.hostsIncludedState }} for a state</li>
+      </ul>
+      <p>The loan terms in the game are the game's own. Nothing on screen is a credit offer, which keeps the review with your compliance team simple.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sect" id="pricing" aria-labelledby="pricingTitle">
+  <div class="wrap split split--even">
+    <div>
+      <span class="eyebrow">Pricing</span>
+      <h2 id="pricingTitle">One price per chamber</h2>
+      <p class="lede">You pay for the games; the chamber provides the room and invites its members. The price is the same as when a chamber pays for itself.</p>
+      <p class="pricebox__reach">At {{ B.participantsPerGame[0] }}–{{ B.participantsPerGame[1] }} participants per game, {{ P.annual.price | usd }} reaches {{ reachLo }}–{{ reachHi }} business owners a year — about {{ (P.annual.price / reachHi) | round | usd }}–{{ (P.annual.price / reachLo) | round | usd }} per personal contact.</p>
+    </div>
+    <div class="pricebox">
+      <table class="ptable">
+        <tbody>
+          <tr><th scope="row">Demo game for your team</th><td>Free</td></tr>
+          <tr><th scope="row">One sponsored game</th><td>{{ P.signature.price | usd }}</td></tr>
+          <tr><th scope="row">{{ P.annual.games }} games in one chamber</th><td>{{ P.annual.price | usd }} a year</td></tr>
+          <tr><th scope="row">From {{ B.volumeFrom }} chambers</th><td>{{ B.volumePrice | usd }} per chamber a year</td></tr>
+          <tr><th scope="row">Extra game</th><td>{{ O.extraGame | usd }} · {{ O.extraGameVolume | usd }} from {{ B.volumeFrom }} chambers</td></tr>
+          <tr><th scope="row">Host certification</th><td>{{ O.hostCertification | usd }} per person</td></tr>
+          <tr><th scope="row">Spanish-language game</th><td>+{{ O.spanish | usd }}</td></tr>
+          <tr><th scope="row">In-person host from our team</th><td>+{{ O.inPerson | usd }} plus travel</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="sect sect--ink" id="exclusive" aria-labelledby="exTitle">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Exclusive Banking Partner</span>
+      <h2 id="exTitle">The only lender in the game — in your territory</h2>
+    </div>
+    <div class="prose">
+      <p class="lede">Exclusivity isn't sold separately: it comes with volume. Sponsor games in {{ B.exclusiveMetroFrom }} chambers of a metro area or {{ B.exclusiveStateFrom }} chambers of a state, and no other lender appears in our games there.</p>
+      <ul class="ticks">
+        <li>The first right to sponsor every new chamber in your territory</li>
+        <li>A dedicated manager and quarterly reviews</li>
+        <li>Attendance and participant reports for your CRA file</li>
+        <li>Host certification included: {{ B.hostsIncludedMetro }} people for a metro area, {{ B.hostsIncludedState }} for a state</li>
+      </ul>
+      <div class="btns">
+        <button type="button" class="btn" data-lead="bank" data-lead-note="Exclusive Banking Partner">Discuss exclusivity</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sect" id="availability" aria-labelledby="avTitle">
+  <div class="wrap">
+    <span class="eyebrow">Availability</span>
+    <h2 id="avTitle">Where your bank can be the partner</h2>
+    <p class="lede">Tick the states where you serve business customers. We'll bring the picture to your demo.</p>
+    <div class="avail" data-avail>
+      <div class="avail__bar">
+        <p class="avail__sum" data-avail-sum aria-live="polite">No states selected.</p>
+        <button type="button" class="btn btn--sm" data-lead="bank" data-avail-go>Request a demo for these states</button>
+      </div>
+      <table class="atable">
+        <thead>
+          <tr>
+            <th scope="col"><span class="sr">Select</span></th>
+            <th scope="col">State</th>
+            <th scope="col">Banking partner</th>
+            <th scope="col">Chambers listed</th>
+            <th scope="col">Programs running</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in states %}{% set i = stateInfo[s.abbr] %}
+          <tr>
+            <td><input type="checkbox" value="{{ s.abbr }}" data-name="{{ s.name }}" data-open="{{ 1 if i.bank.status == 'open' else 0 }}" aria-label="Select {{ s.name }}"></td>
+            <th scope="row"><a href="/{{ s.slug }}/">{{ s.name }}</a></th>
+            <td>{% if i.bank.status == 'open' %}<span class="badge badge--open">Open</span>{% else %}<span class="badge badge--taken">{{ i.bank.name or ('Exclusive' if i.bank.status == 'exclusive' else 'Partner') }}</span>{% endif %}</td>
+            <td>{{ i.chambers.length if i.chambers.length else '—' }}</td>
+            <td>{{ i.active or '—' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="sect sect--tint" id="sponsors" aria-labelledby="spTitle">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Not a bank?</span>
+      <h2 id="spTitle">Other sponsors</h2>
+    </div>
+    <div class="prose">
+      <p class="lede">Credit unions and CDFIs get the same loan integration as banks. Insurance companies, utilities, large employers and other local businesses sponsor with their name on the screens, "Presented by" in the invitations and their own certified host.</p>
+      <div class="btns">
+        <button type="button" class="btn" data-lead="sponsor">Request a demo as a sponsor</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sect" id="how" aria-labelledby="howTitle">
+  <div class="wrap">
+    <span class="eyebrow">How it works</span>
+    <h2 id="howTitle">From demo to your first game</h2>
+    <div class="steps">
+      <article><h3>Request a demo game</h3><p>A manager contacts you within one business day and sets a time that suits your team.</p></article>
+      <article><h3>Play the demo</h3><p>60 minutes online for your business banking, marketing or CRA team. Free.</p></article>
+      <article><h3>Choose your territory</h3><p>One chamber, several chambers in your footprint, a metro area or a whole state.</p></article>
+      <article><h3>Line up the chambers</h3><p>We bring the chambers on board — or you bring the chambers you already sponsor.</p></article>
+      <article><h3>Certify your hosts</h3><p>Optional: your people host in person after training and two games next to our host.</p></article>
+      <article><h3>Monthly games and reports</h3><p>Your brand in every game, a report after each one, quarterly reviews for exclusive partners.</p></article>
+    </div>
+  </div>
+</section>
+
+{% include "partials/faq.njk" %}
+
+<section class="sect sect--dark final" aria-labelledby="ctaTitle">
+  <div class="wrap">
+    <span class="eyebrow">Your next move</span>
+    <h2 id="ctaTitle">See the game with your team</h2>
+    <p class="lede">Book a free 60-minute demo game. A manager will agree on a time that suits you.</p>
+    <div class="btns">
+      <button type="button" class="btn" data-lead="bank">Request a demo for your team</button>
+      <a class="btn btn--line" href="/print/bank/">Bank partner brief (PDF)</a>
+    </div>
+  </div>
+</section>

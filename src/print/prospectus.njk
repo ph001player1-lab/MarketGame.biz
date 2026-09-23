@@ -1,0 +1,48 @@
+---
+layout: layouts/print.njk
+permalink: /print/prospectus/
+title: "Sponsor prospectus — Market Game"
+fields: '<label>Chamber name <input type="text" data-input="chamber" placeholder="Your chamber"></label><label>Sponsor <input type="text" data-input="sponsor" placeholder="e.g. First Community Bank"></label><label>Contact name <input type="text" data-input="person" placeholder="Your name"></label><label>Contact email <input type="email" data-input="email" placeholder="you@chamber.org"></label>'
+---
+{% set P = pricing.packages %}
+{% set O = pricing.options %}
+{% set B = pricing.bank %}
+{% set reachLo = B.participantsPerGame[0] * P.annual.games %}
+{% set reachHi = B.participantsPerGame[1] * P.annual.games %}
+<header class="doc__head">
+  <p class="doc__brand" data-fill="chamber" data-empty="Our chamber"></p>
+  <p class="doc__kind">Sponsorship opportunity<span data-show-if="state"> · <span data-fill="stateName"></span></span></p>
+</header>
+
+<h1 class="doc__title">Presented by <span data-fill="sponsor" data-empty="your bank"></span>: a monthly business game for local business owners</h1>
+<p class="doc__lede">Once a month, owners of local businesses meet at <span data-fill="chamber" data-empty="our chamber"></span> to play Market Game — a hands-on business simulation. Teams run competing companies in one shared market, and sooner or later every team needs a loan. As the presenting sponsor, your bank is the one that gives it.</p>
+
+<div class="doc__cols">
+  <section>
+    <h2>What the sponsor gets</h2>
+    <ul>
+      <li><b>Your brand on the loan inside the game</b> and your name on the screens for the whole game.</li>
+      <li><b>Your own host.</b> After certification, your representative hosts the game in person — two hours with local business owners.</li>
+      <li><b>"Presented by"</b> in our invitations, on the registration page and on participant certificates.</li>
+      <li><b>Opt-in contacts</b> of participants who agree to hear from you.</li>
+      <li><b>A report after every game:</b> who played and which businesses took part.</li>
+      <li><b>CRA.</b> Financial education for small businesses by your staff may qualify as a community development service; your CRA officer decides.</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Investment</h2>
+    <table class="doc__table doc__table--price">
+      <tr><th>12 games, one a month</th><td>{{ P.annual.price | usd }} a year</td></tr>
+      <tr><th>One game</th><td>{{ P.signature.price | usd }}</td></tr>
+      <tr><th>Host certification</th><td>{{ O.hostCertification | usd }} per person</td></tr>
+    </table>
+    <p class="doc__small">Loan terms in the game are the game's own; nothing on screen is a credit offer.</p>
+    <h2>Reach</h2>
+    <p>At {{ B.participantsPerGame[0] }}–{{ B.participantsPerGame[1] }} participants per game, twelve games reach <b>{{ reachLo }}–{{ reachHi }} business owners a year</b> — about {{ (P.annual.price / reachHi) | round | usd }}–{{ (P.annual.price / reachLo) | round | usd }} per personal contact.</p>
+  </section>
+</div>
+
+<footer class="doc__foot">
+  <p data-show-if="person"><b>Contact:</b> <span data-fill="person"></span><span data-show-if="email">, <span data-fill="email"></span></span></p>
+  <p>Program by Market Game · {{ site.url | replace("https://", "") }}</p>
+</footer>

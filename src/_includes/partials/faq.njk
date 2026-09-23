@@ -1,0 +1,70 @@
+{% set P = pricing.packages %}
+{% set O = pricing.options %}
+<section class="sect sect--tint" id="faq" aria-labelledby="faqTitle">
+  <div class="wrap">
+    <span class="eyebrow">Frequently asked</span>
+    <h2 id="faqTitle">The short answers</h2>
+
+    <div class="faq">
+      <h3 class="faq__group">For chambers</h3>
+      <details>
+        <summary>What happens at a game?</summary>
+        <p class="faq__a">Teams of your members run competing companies in one shared market for about two hours, then go through a debrief. You don't need to learn the rules in advance — nobody does. <a href="{{ site.game.url }}">How the game works</a></p>
+      </details>
+      <details>
+        <summary>What do we need to host it?</summary>
+        <p class="faq__a">A room, a big screen or projector and Wi-Fi. Participants play on their phones or laptops. Our host joins by video; an in-person host is optional ({{ O.inPerson | usd }} per game plus travel).</p>
+      </details>
+      <details>
+        <summary>How many people can play?</summary>
+        <p class="faq__a">Four to twenty teams per game. A team can be one person or several, and the ticket is per team. The fuller the room, the tighter the market.</p>
+      </details>
+      <details>
+        <summary>Who pays — the chamber or a sponsor?</summary>
+        <p class="faq__a">Either. The price is the same. If a bank or another sponsor pays, the games are free for your chamber, and you still sign a 12-game agreement: you provide the room, invite members and run registration.</p>
+      </details>
+      <details>
+        <summary>Can we charge members for tickets?</summary>
+        <p class="faq__a">Yes, and the money stays with your chamber. Suggested prices per team: {{ pricing.formats.start.ticket | usd }} for Start, {{ pricing.formats.growth.ticket | usd }} for Growth, {{ pricing.formats.elite.ticket | usd }} for Elite. Apply your usual member discounts. A paid ticket also cuts no-shows, which matters for a game: empty seats make the market thinner.</p>
+      </details>
+      <details>
+        <summary>What if too few people register?</summary>
+        <p class="faq__a">A game needs at least four teams. If registrations run low, we agree on a new date together.</p>
+      </details>
+      <details>
+        <summary>Is it available in Spanish?</summary>
+        <p class="faq__a">Yes, as an option: {{ O.spanish | usd }} per game.</p>
+      </details>
+      <details>
+        <summary>Why not just send our members to your open games?</summary>
+        <p class="faq__a">You can — open games are public and priced the same per team. A chamber program is different: it runs in your room, under your brand, for your members, and the ticket and sponsorship revenue is yours.</p>
+      </details>
+      <details>
+        <summary>How do we pay?</summary>
+        <p class="faq__a">We invoice in U.S. dollars. The Annual Program is billed monthly under a 12-month agreement.</p>
+      </details>
+
+      <h3 class="faq__group">For banks &amp; sponsors</h3>
+      <details>
+        <summary>Is the loan in the game a real offer?</summary>
+        <p class="faq__a">No. The game uses its own loan terms; your bank gives the loan its name. Nothing on screen is a credit offer, which keeps the review with your compliance team simple.</p>
+      </details>
+      <details>
+        <summary>Can our own staff host the games?</summary>
+        <p class="faq__a">Yes. Certification costs {{ O.hostCertification | usd }} per person: training plus two games next to our host. After that your representative hosts in person, and our team runs the game in the background by video.</p>
+      </details>
+      <details>
+        <summary>Do we get the participants' contacts?</summary>
+        <p class="faq__a">Only of those who opt in when they register. Everyone else's details stay with the chamber.</p>
+      </details>
+      <details>
+        <summary>Does it count toward CRA?</summary>
+        <p class="faq__a">It may. When your staff provide financial education to small businesses, the activity may qualify as a community development service. The decision is your CRA officer's; we provide attendance and participant reports for your file.</p>
+      </details>
+      <details>
+        <summary>What does exclusivity mean?</summary>
+        <p class="faq__a">Your bank becomes the only lender in our games in a territory — a metro area from {{ pricing.bank.exclusiveMetroFrom }} chambers or a whole state from {{ pricing.bank.exclusiveStateFrom }}. You get the first right to sponsor every new chamber there, a dedicated manager, quarterly reviews and host certification included.</p>
+      </details>
+    </div>
+  </div>
+</section>

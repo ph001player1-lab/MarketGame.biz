@@ -1,0 +1,50 @@
+{# Блок для банков и спонсоров. Стоит на каждой странице и виден всем:
+   палата узнаёт из него, что программа может быть бесплатной,
+   банк — что он получает. #}
+{% set B = pricing.bank %}
+{% set P = pricing.packages %}
+{% set reachLo = B.participantsPerGame[0] * P.annual.games %}
+{% set reachHi = B.participantsPerGame[1] * P.annual.games %}
+<section class="sect sect--ink" id="banks" aria-labelledby="banksTitle">
+  <div class="wrap">
+    <span class="eyebrow">For banks &amp; sponsors</span>
+    <h2 id="banksTitle">Put your bank in the game</h2>
+    <div class="split split--even">
+      <div>
+        <p class="lede">Sooner or later, every team in the game needs a loan. With Market Game, the loan they take carries your name — and your representative can host the game in the room.</p>
+        {% if state %}{% set bi = stateInfo[state.abbr].bank %}
+        <p class="status">Banking partner in {{ state.name }}:
+          <b class="badge {{ 'badge--open' if bi.status == 'open' else 'badge--taken' }}">{% if bi.status == 'open' %}open{% elif bi.name %}{{ bi.name }}{% else %}in place{% endif %}</b>
+        </p>
+        {% endif %}
+        <ul class="ticks">
+          <li>Your brand on the loan inside the game and your name on the screens</li>
+          <li>Your certified representative hosts games in person — personal contact with local business owners</li>
+          <li>"Presented by" in the chamber's invitations and on participant certificates</li>
+          <li>Contacts of participants who opt in</li>
+          <li>A report after every game</li>
+          <li>May qualify for CRA community development credit — your CRA officer decides</li>
+        </ul>
+      </div>
+      <div class="pricebox">
+        <table class="ptable">
+          <tbody>
+            <tr><th scope="row">Demo game for your team</th><td>Free</td></tr>
+            <tr><th scope="row">One sponsored game</th><td>{{ P.signature.price | usd }}</td></tr>
+            <tr><th scope="row">{{ P.annual.games }} games in one chamber</th><td>{{ P.annual.price | usd }} a year</td></tr>
+            <tr><th scope="row">From {{ B.volumeFrom }} chambers</th><td>{{ B.volumePrice | usd }} per chamber a year</td></tr>
+            <tr><th scope="row">Exclusive: metro area</th><td>from {{ B.exclusiveMetroFrom }} chambers</td></tr>
+            <tr><th scope="row">Exclusive: state</th><td>from {{ B.exclusiveStateFrom }} chambers</td></tr>
+            <tr><th scope="row">Host certification</th><td>{{ pricing.options.hostCertification | usd }} per person</td></tr>
+          </tbody>
+        </table>
+        <p class="pricebox__reach">At {{ B.participantsPerGame[0] }}–{{ B.participantsPerGame[1] }} participants per game, {{ P.annual.price | usd }} reaches {{ reachLo }}–{{ reachHi }} business owners a year — about {{ (P.annual.price / reachHi) | round | usd }}–{{ (P.annual.price / reachLo) | round | usd }} per personal contact.</p>
+        <div class="btns">
+          <button type="button" class="btn" data-lead="bank">Request a demo for your team</button>
+          <a class="btn btn--line" href="/banks/">Details for banks</a>
+        </div>
+      </div>
+    </div>
+    <p class="banks__chamber"><b>Chamber looking for a sponsor?</b> Send your bank a ready-made sponsor prospectus with your chamber's name. <a href="/print/prospectus/{% if state %}?state={{ state.abbr }}{% endif %}">Create the prospectus (PDF)</a></p>
+  </div>
+</section>

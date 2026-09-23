@@ -1,0 +1,18 @@
+{# Малый бизнес штата в цифрах. Показывается, только когда в states.json
+   у штата заполнено поле stats — формат описан в README. #}
+{% set st = state.stats %}
+{% if st %}
+<section class="sect sect--tint" id="stats" aria-labelledby="statsTitle">
+  <div class="wrap">
+    <span class="eyebrow">Small business in {{ state.name }}</span>
+    <h2 id="statsTitle">Your members are part of this</h2>
+    <dl class="specs">
+      {% if st.smallBusinesses %}<div><dt>Small businesses</dt><dd>{{ st.smallBusinesses | num }}</dd>{% if st.employmentShare %}<p>employ {{ st.employmentShare }}% of the private workforce</p>{% endif %}</div>{% endif %}
+      {% if st.applications %}<div><dt>New business applications{% if st.applicationsYear %}, {{ st.applicationsYear }}{% endif %}</dt><dd>{{ st.applications | num }}</dd><p>people starting something new — the Start audience</p></div>{% endif %}
+      {% if st.survival5 %}<div><dt>Still open after five years</dt><dd>{{ st.survival5 }}%</dd><p>of new businesses — the rest pay for their mistakes with real money</p></div>{% endif %}
+      {% if st.sbaLoans %}<div><dt>SBA-backed loans{% if st.sbaYear %}, {{ st.sbaYear }}{% endif %}</dt><dd>{{ st.sbaLoans | num }}</dd><p>small businesses that borrowed to grow</p></div>{% endif %}
+    </dl>
+    {% if st.sources %}<p class="specnote">Sources: {{ st.sources }}</p>{% endif %}
+  </div>
+</section>
+{% endif %}

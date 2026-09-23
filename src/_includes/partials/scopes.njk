@@ -1,0 +1,35 @@
+{# Модули «Across the U.S.» и «Internationally» на странице штата.
+   Что посетитель отметил на первом экране, selector.js раскрывает
+   и подсвечивает; остальное остаётся свёрнутой строкой. #}
+<section class="sect sect--tint" id="scopes" aria-labelledby="scopesTitle">
+  <div class="wrap">
+    <span class="eyebrow">Beyond {{ state.name }}</span>
+    <h2 id="scopesTitle">Members who do business beyond the state</h2>
+
+    <details class="scope" data-scope-module="us">
+      <summary><span class="scope__t">Across the U.S.</span><span class="scope__sub">companies working in several states</span><span class="scope__mark" data-scope-mark>Selected</span></summary>
+      <div class="scope__body">
+        <p>Online games where teams from different states compete in one market. Topics shift toward growth beyond the home market: capacity, financing an expansion, national competitors.</p>
+        <ul class="ticks">
+          <li>Members play against owners from other states — nobody plays on home turf</li>
+          <li>Fits national associations, franchise networks and multi-location companies</li>
+          <li>Sponsors: national banks and SBA lenders</li>
+        </ul>
+        <a class="more" href="/nationwide/">Across the U.S. in detail</a>
+      </div>
+    </details>
+
+    <details class="scope" data-scope-module="intl">
+      <summary><span class="scope__t">Internationally</span><span class="scope__sub">importers, exporters, foreign markets</span><span class="scope__mark" data-scope-mark>Selected</span></summary>
+      <div class="scope__body">
+        <p>Online games with teams from different countries. Topics: entering a market where locals already compete, pricing against incumbents, the cash gap of long payment terms.</p>
+        <ul class="ticks">
+          <li>For members who import, export or sell abroad</li>
+          <li>Fits AmChams, bi-national chambers and World Trade Centers</li>
+          <li>Sponsors: banks with trade finance</li>
+        </ul>
+        <a class="more" href="/international/">International in detail</a>
+      </div>
+    </details>
+  </div>
+</section>

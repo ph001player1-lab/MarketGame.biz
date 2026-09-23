@@ -1,0 +1,57 @@
+/* Документы для PDF: /print/brief/, /print/prospectus/, /print/bank/.
+   На экране — лист с панелью полей сверху, при печати — только лист
+   формата US Letter. */
+
+@font-face{font-family:'Unbounded';src:url('../fonts/Unbounded.woff2') format('woff2');font-weight:200 900;font-style:normal;font-display:swap}
+@font-face{font-family:'Manrope';src:url('../fonts/Manrope.woff2') format('woff2');font-weight:200 800;font-style:normal;font-display:swap}
+
+:root{--paper:#F2F1EC;--ink:#16161A;--mute:#5A5A62;--red:#D8422A;--red-ink:#B0331F;--line:#D3D2CA}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:#DAD9D2;color:var(--ink);font-family:'Manrope',system-ui,sans-serif;font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* --- панель полей (только на экране) --- */
+.toolbar{position:sticky;top:0;z-index:5;background:var(--ink);color:#F2F1EC;padding:12px 16px}
+.toolbar__in{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 16px;max-width:1100px;margin:0 auto}
+.toolbar__back{color:#F2F1EC;font-weight:700;text-decoration:none;align-self:center}
+.toolbar__fields{display:flex;flex-wrap:wrap;gap:8px 12px;flex:1 1 auto}
+.toolbar label{display:flex;flex-direction:column;gap:4px;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#B4B4BD}
+.toolbar input,.toolbar select{font:inherit;font-size:14.5px;font-weight:500;text-transform:none;letter-spacing:0;padding:7px 9px;border:1.5px solid rgba(242,241,236,.3);border-radius:3px;background:#22222A;color:#F2F1EC;min-width:170px}
+.toolbar__save{font:inherit;font-weight:800;font-size:15px;padding:10px 18px;border:0;border-radius:3px;background:#C23A24;color:#fff;cursor:pointer}
+.toolbar__save:hover{background:#A12E1B}
+.toolbar__hint{max-width:1100px;margin:8px auto 0;font-size:12.5px;color:#B4B4BD}
+
+/* --- сам документ --- */
+.doc{width:8.5in;max-width:calc(100% - 24px);min-height:11in;margin:24px auto 48px;background:#fff;padding:.65in .7in;box-shadow:0 10px 40px rgba(0,0,0,.18)}
+.doc__head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:22px}
+.doc__brand{font-family:'Unbounded',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:-.02em;margin:0}
+.doc__brand em{font-style:normal;color:var(--red)}
+.doc__kind{margin:0;font-size:12.5px;font-weight:700;color:var(--mute);text-align:right}
+.doc__title{font-family:'Unbounded',sans-serif;font-weight:800;font-size:25px;line-height:1.12;letter-spacing:-.03em;text-transform:uppercase;margin:0 0 12px}
+.doc__lede{font-size:15.5px;color:#2A2A31;margin:0 0 20px}
+.doc h2{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--red-ink);margin:18px 0 8px}
+.doc ul{margin:0;padding-left:18px}
+.doc li{margin-bottom:5px}
+.doc__cols{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+@media(max-width:640px){.doc__cols{grid-template-columns:1fr}.doc{padding:24px 18px}}
+.doc__table{width:100%;border-collapse:collapse;font-size:13.5px}
+.doc__table th,.doc__table td{padding:7px 6px 7px 0;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+.doc__table th{font-weight:800;white-space:nowrap;padding-right:12px}
+.doc__table td:last-child{text-align:right;font-weight:800;white-space:nowrap}
+.doc__table small{color:var(--mute)}
+.doc__small{font-size:12.5px;color:var(--mute);margin:8px 0 0}
+.doc__facts{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.doc__facts li{border:1.5px solid var(--ink);padding:8px 10px;margin:0}
+.doc__facts span{display:block;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.doc__facts b{font-size:13.5px}
+.doc__foot{margin-top:26px;padding-top:12px;border-top:2px solid var(--ink);font-size:13.5px}
+.doc__foot p{margin:0 0 4px}
+
+@page{size:letter;margin:.5in}
+@media print{
+  body{background:#fff}
+  .toolbar{display:none}
+  .doc{width:auto;max-width:none;min-height:0;margin:0;padding:0;box-shadow:none}
+  .doc section,.doc__cols{break-inside:avoid}
+  a{color:inherit;text-decoration:none}
+}

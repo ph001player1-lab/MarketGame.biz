@@ -1,0 +1,35 @@
+{# Первый экран: кто вы и где работают ваши участники.
+   Логика — в assets/js/selector.js: запоминает выбор и ведёт на страницу
+   штата, Nationwide или International. #}
+<form class="pick" id="start" data-selector novalidate>
+  <p class="pick__t">Tailor this page to you</p>
+
+  <fieldset class="pick__set">
+    <legend class="pick__legend">I represent</legend>
+    <div class="seg" role="radiogroup">
+      <label class="seg__opt"><input type="radio" name="who" value="chamber" checked><span>A chamber of commerce</span></label>
+      <label class="seg__opt"><input type="radio" name="who" value="bank"><span>A bank or credit union</span></label>
+      <label class="seg__opt"><input type="radio" name="who" value="sponsor"><span>Another sponsor</span></label>
+    </div>
+  </fieldset>
+
+  <fieldset class="pick__set">
+    <legend class="pick__legend" data-where-label>Where do your members do business?</legend>
+    <p class="pick__hint">Choose one, two or all three.</p>
+    <div class="pick__scope">
+      <label class="check"><input type="checkbox" name="scope" value="state"><span>In our state</span></label>
+      <select class="pick__state" name="state" aria-label="Your state">
+        <option value="">Choose a state…</option>
+        {% for s in states %}<option value="{{ s.abbr }}">{{ s.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <label class="check"><input type="checkbox" name="scope" value="us"><span>Across the U.S. <small>several states</small></span></label>
+    <label class="check"><input type="checkbox" name="scope" value="intl"><span>Internationally <small>foreign markets</small></span></label>
+  </fieldset>
+
+  <p class="pick__note" data-detect-note hidden></p>
+  <p class="pick__err" role="alert" data-pick-err hidden></p>
+  <button type="submit" class="btn pick__go">Show my program</button>
+  <noscript><p class="pick__hint">Pick your state on the map below.</p></noscript>
+</form>

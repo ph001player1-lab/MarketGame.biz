@@ -1,0 +1,92 @@
+{# Калькулятор окупаемости для палаты. Считает assets/js/calc.js;
+   значения по умолчанию здесь совпадают с примером «A year of games». #}
+{% set F = pricing.formats %}
+{% set P = pricing.packages %}
+{% set defaults = { start: [5, 12], growth: [6, 14], elite: [1, 7] } %}
+<section class="sect sect--dark" id="calculator" aria-labelledby="calcTitle">
+  <div class="wrap">
+    <span class="eyebrow">Will it pay for itself?</span>
+    <h2 id="calcTitle">Tickets stay with your chamber</h2>
+    <p class="lede">Suggested ticket prices match our open games: {{ F.start.ticket | usd }} per team for Start, {{ F.growth.ticket | usd }} for Growth and {{ F.elite.ticket | usd }} for Elite — Elite teams are usually paid for by their employer. Apply your usual member discounts. Every ticket dollar is yours.</p>
+
+    <div class="calc" data-calc data-mode="annual">
+      <div class="calc__presets" role="group" aria-label="Examples">
+        <span class="calc__presets-t">Examples:</span>
+        <button type="button" class="pill" data-preset="owners">Owners' game</button>
+        <button type="button" class="pill" data-preset="elite">One Elite game</button>
+        <button type="button" class="pill" data-preset="beginners">Beginners' game</button>
+        <button type="button" class="pill" data-preset="year">A year of games</button>
+        <button type="button" class="pill" data-preset="sponsored">A sponsored year</button>
+      </div>
+
+      <div class="calc__grid">
+        <form class="calc__panel" data-calc-form novalidate>
+          <fieldset class="calc__set">
+            <legend>Package</legend>
+            <label class="calc__radio"><input type="radio" name="pkg" value="pilot"> <span>{{ P.pilot.name }}</span> <b>{{ P.pilot.price | usd }}</b></label>
+            <label class="calc__radio"><input type="radio" name="pkg" value="signature"> <span>{{ P.signature.name }}</span> <b>{{ P.signature.price | usd }}</b></label>
+            <label class="calc__radio"><input type="radio" name="pkg" value="annual" checked> <span>{{ P.annual.name }}, {{ P.annual.games }} games</span> <b>{{ P.annual.price | usd }}</b></label>
+            <label class="calc__radio calc__founding"><input type="checkbox" name="founding"> <span>Founding Chamber price</span> <b>{{ pricing.foundingPilot | usd }}</b></label>
+          </fieldset>
+
+          <fieldset class="calc__set">
+            <legend>Games and teams</legend>
+            <table class="calc__table">
+              <thead>
+                <tr>
+                  <th scope="col">Format</th>
+                  <th scope="col" class="calc__many">Games a year</th>
+                  <th scope="col">Teams per game</th>
+                  <th scope="col">Ticket</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for key, f in F %}
+                <tr data-row="{{ key }}">
+                  <th scope="row">
+                    <label class="calc__one"><input type="radio" name="single" value="{{ key }}"{% if key == 'growth' %} checked{% endif %}> {{ f.name }}</label>
+                    <span class="calc__many">{{ f.name }}</span>
+                  </th>
+                  <td class="calc__many"><input type="number" name="games_{{ key }}" value="{{ defaults[key][0] }}" min="0" max="24" step="1" inputmode="numeric" aria-label="{{ f.name }} games a year"></td>
+                  <td><input type="number" name="teams_{{ key }}" value="{{ defaults[key][1] }}" min="0" max="20" step="1" inputmode="numeric" aria-label="{{ f.name }} teams per game"></td>
+                  <td class="calc__ticket">{{ f.ticket | usd }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            <p class="calc__hint" data-calc-hint></p>
+          </fieldset>
+
+          <fieldset class="calc__set calc__set--row">
+            <legend>Members and sponsor</legend>
+            <label class="calc__field">Member teams, %<input type="number" name="memberShare" value="60" min="0" max="100" step="5" inputmode="numeric"></label>
+            <label class="calc__field">Member discount, %<input type="number" name="memberDiscount" value="20" min="0" max="100" step="5" inputmode="numeric"></label>
+            <label class="calc__field"><span data-sponsor-label>Sponsor pays, $ a year</span><input type="number" name="sponsor" value="0" min="0" step="500" inputmode="numeric"></label>
+          </fieldset>
+
+          <fieldset class="calc__set calc__set--row">
+            <legend>Options</legend>
+            <label class="calc__field">Spanish-language games<input type="number" name="spanish" value="0" min="0" max="24" inputmode="numeric"></label>
+            <label class="calc__field">Games with an in-person host<input type="number" name="inPerson" value="0" min="0" max="24" inputmode="numeric"></label>
+          </fieldset>
+        </form>
+
+        <div class="calc__out" aria-live="polite">
+          <p class="calc__lab">Your chamber's result</p>
+          <p class="calc__total" data-out="result">—</p>
+          <p class="calc__verdict" data-out="verdict"></p>
+          <dl class="calc__stats">
+            <div><dt>Ticket revenue</dt><dd data-out="revenue">—</dd></div>
+            <div><dt>Sponsor</dt><dd data-out="sponsor">—</dd></div>
+            <div><dt>Program cost</dt><dd data-out="cost">—</dd></div>
+          </dl>
+          <p class="calc__breakdown" data-out="breakdown"></p>
+          <p class="calc__be" data-out="breakeven"></p>
+          <p class="calc__fine">Travel for in-person hosts is billed at cost and not included. Suggested ticket prices; your chamber sets its own.</p>
+        </div>
+      </div>
+      <p class="calc__take"><b>Elite pays for Start.</b> And when a sponsor pays for the games, every ticket dollar is your chamber's income.</p>
+      <noscript><p class="calc__take">Turn on JavaScript to use the calculator.</p></noscript>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,20 @@
+<footer class="foot">
+  <div class="wrap foot__in">
+    <div>
+      <a class="logo logo--sm" href="/">Market <em>Game</em></a>
+      <p class="foot__line">Business simulation programs for chambers of commerce, banks and sponsors in the United States and internationally.</p>
+      {% if site.company.legalName %}
+      <p class="foot__line">{{ site.company.legalName }}{% if site.company.address %} · {{ site.company.address }}{% endif %}{% if site.company.registration %} · {{ site.company.registration }}{% endif %}</p>
+      {% endif %}
+    </div>
+    <nav class="foot__nav" aria-label="Footer">
+      <a href="/#states">Choose your state</a>
+      <a href="/nationwide/">Across the U.S.</a>
+      <a href="/international/">International</a>
+      <a href="/banks/">For banks &amp; sponsors</a>
+      <a href="{{ site.game.url }}">The game: {{ site.game.name }}</a>
+      <a href="/privacy/">Privacy</a>
+      {% if site.contact.email %}<a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>{% endif %}
+    </nav>
+  </div>
+</footer>

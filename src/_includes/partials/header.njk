@@ -1,0 +1,16 @@
+<header class="bar">
+  <div class="wrap bar__in">
+    <a class="logo" href="/" aria-label="{{ site.brand }} — home">Market <em>Game</em></a>
+    <nav class="nav" aria-label="Main">
+      <a href="{{ '' if hasPrograms else '/' }}#programs">Programs</a>
+      <a href="/banks/">For banks &amp; sponsors</a>
+      <a href="{{ '' if hasPrograms else '/' }}#how">How it works</a>
+      <a href="{{ '' if hasPrograms else '/' }}#faq">FAQ</a>
+    </nav>
+    <div class="bar__right">
+      {# Штат посетителя, если он уже выбирал: заполняет selector.js #}
+      <a class="chip" href="/#start" data-profile-chip hidden></a>
+      <button type="button" class="btn btn--sm" data-lead="">Request a demo</button>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,30 @@
+{
+  "brand": "Market Game",
+  "url": "https://marketgame.biz",
+  "description": "A hands-on business simulation for chambers of commerce, banks and sponsors. Local business owners run competing companies in one shared market. Free 60-minute demo game.",
+
+  "game": {
+    "name": "Capture the Market",
+    "url": "https://marketgame.club/en/"
+  },
+
+  "formEndpoint": "",
+
+  "contact": {
+    "email": "",
+    "whatsapp": "https://wa.me/66823204796",
+    "telegram": "https://t.me/Nickbv"
+  },
+
+  "company": {
+    "legalName": "",
+    "address": "",
+    "registration": ""
+  },
+
+  "author": {
+    "name": "Nikolay Bulenkov"
+  },
+
+  "privacyUpdated": "September 23, 2026"
+}

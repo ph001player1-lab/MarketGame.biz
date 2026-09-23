@@ -1,0 +1,18 @@
+{
+  "name": "marketgame-biz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "marketgame.biz — Market Game programs for chambers of commerce, banks and sponsors",
+  "type": "module",
+  "scripts": {
+    "build": "eleventy",
+    "start": "eleventy --serve",
+    "sync": "node scripts/sync-sheet.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.6"
+  }
+}

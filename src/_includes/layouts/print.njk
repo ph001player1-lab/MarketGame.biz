@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/print.css">
+<script id="mg-data" type="application/json">{{ client | jsonScript | safe }}</script>
+</head>
+<body class="doc-page">
+{# Панель над документом: поля для подстановки и кнопка сохранения.
+   При печати она скрыта — в PDF попадает только сам документ. #}
+<div class="toolbar" data-toolbar>
+  <div class="toolbar__in">
+    <a class="toolbar__back" href="/">← marketgame.biz</a>
+    <div class="toolbar__fields">
+      {{ fields | safe }}
+      <label>State
+        <select data-input="state">
+          <option value="">—</option>
+          {% for s in states %}<option value="{{ s.abbr }}">{{ s.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+    <button type="button" class="toolbar__save" data-save>Save as PDF</button>
+  </div>
+  <p class="toolbar__hint">In the print dialog, choose “Save as PDF”. Your entries stay in this link, so you can send it to a colleague.</p>
+</div>
+
+<article class="doc">
+{{ content | safe }}
+</article>
+
+<script src="/assets/js/print.js" defer></script>
+</body>
+</html>

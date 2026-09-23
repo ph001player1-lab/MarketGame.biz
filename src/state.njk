@@ -1,0 +1,58 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: states
+  size: 1
+  alias: state
+permalink: "/{{ state.slug }}/"
+pageKind: state
+hasPrograms: true
+eleventyComputed:
+  title: "Market Game in {{ state.name }} — a monthly business game for chambers of commerce"
+  ogTitle: "For chambers of commerce in {{ state.name }}"
+  description: "A hands-on business simulation for chambers of commerce in {{ state.name }}: local business owners compete in one shared market, every month. Paid by the chamber or by a sponsor. Free 60-minute demo game."
+---
+{# Страница штата. Одна на все 51: данные штата — из states.json,
+   статусы — из chambers.json и banks.json. #}
+{% set info = stateInfo[state.abbr] %}
+<section class="hero hero--state">
+  <div class="wrap hero__in">
+    <div class="hero__text">
+      <span class="eyebrow">Market Game in {{ state.name }}</span>
+      <h1>For chambers of commerce <span>in {{ state.name }}</span></h1>
+      <p class="lede">A hands-on business game for your members, every month, in your room. Local business owners run competing companies in one shared market and see how price, marketing, capacity and cash decide who wins. Paid by your chamber — or by a sponsor.</p>
+
+      <dl class="facts">
+        <div><dt>Time zone</dt><dd>{{ info.zone }}</dd></div>
+        <div><dt>Founding Chamber</dt><dd>{% if info.founding.taken %}{{ info.founding.name or 'Taken' }}{% else %}<span class="badge badge--open">Spot open</span>{% endif %}</dd></div>
+        <div><dt>Banking partner</dt><dd>{% if info.bank.status == 'open' %}<span class="badge badge--open">Open</span>{% else %}{{ info.bank.name or 'In place' }}{% endif %}</dd></div>
+        <div><dt>Programs running</dt><dd>{{ info.active }}</dd></div>
+      </dl>
+
+      <div class="btns">
+        {% if info.founding.taken %}
+        <button type="button" class="btn" data-lead="chamber">Request a demo game</button>
+        {% else %}
+        <button type="button" class="btn" data-lead="chamber" data-lead-note="Founding Chamber claim — {{ state.name }}">Claim Founding status</button>
+        {% endif %}
+        <button type="button" class="btn btn--line" data-lead="bank">I represent a bank</button>
+      </div>
+    </div>
+    {% include "partials/selector.njk" %}
+  </div>
+</section>
+
+<div class="flow">
+{% include "partials/stats.njk" %}
+{% include "partials/chambers.njk" %}
+{% include "partials/benefits.njk" %}
+{% include "partials/experience.njk" %}
+{% include "partials/programs.njk" %}
+{% include "partials/calculator.njk" %}
+{% include "partials/open-games.njk" %}
+{% include "partials/scopes.njk" %}
+{% include "partials/banks.njk" %}
+{% include "partials/how.njk" %}
+{% include "partials/faq.njk" %}
+</div>
+{% include "partials/cta.njk" %}

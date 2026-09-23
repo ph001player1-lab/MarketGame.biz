@@ -1,0 +1,97 @@
+{# Пакеты, форматы и опции. Все цифры — из src/_data/pricing.json. #}
+{% set P = pricing.packages %}
+{% set O = pricing.options %}
+{% set B = pricing.bank %}
+<section class="sect" id="programs" aria-labelledby="programsTitle">
+  <div class="wrap">
+    <span class="eyebrow">Programs &amp; pricing</span>
+    <h2 id="programsTitle">Same price, whoever pays</h2>
+    <p class="lede">Every package can be paid by your chamber or by a sponsor — a bank, a credit union or another local company. The price stays the same.</p>
+
+    <div class="plans">
+      <article class="plan">
+        <span class="plan__tag">Try it first</span>
+        <h3 class="plan__name">{{ P.demo.name }}</h3>
+        <p class="plan__price">Free</p>
+        <p class="plan__per">60 minutes · online</p>
+        <p class="plan__who">For your board, your staff or your bank team. See the game before you buy.</p>
+        <button type="button" class="btn btn--line" data-lead="">Request a demo game</button>
+      </article>
+
+      <article class="plan">
+        <span class="plan__tag">One game</span>
+        <h3 class="plan__name">{{ P.pilot.name }}</h3>
+        <p class="plan__price">{{ P.pilot.price | usd }}</p>
+        <p class="plan__per">one game · up to 20 teams</p>
+        <ul class="plan__facts">
+          <li>Test the format with your members</li>
+          <li>Invitation texts and a short report</li>
+          <li>Credited toward the Annual Program if you sign within {{ pricing.pilotCreditDays }} days</li>
+          <li>Founding Chamber of your state: {{ pricing.foundingPilot | usd }}</li>
+        </ul>
+      </article>
+
+      <article class="plan">
+        <span class="plan__tag">Full package</span>
+        <h3 class="plan__name">{{ P.signature.name }}</h3>
+        <p class="plan__price">{{ P.signature.price | usd }}</p>
+        <p class="plan__per">one game · up to 20 teams</p>
+        <ul class="plan__facts">
+          <li>Your chamber's branding on screens and materials</li>
+          <li>Sponsor package: "Presented by", logo, a word from the sponsor</li>
+          <li>Certificates for participants</li>
+          <li>Report for your board and your sponsor</li>
+        </ul>
+      </article>
+
+      <article class="plan plan--hot">
+        <span class="plan__tag">Best value</span>
+        <h3 class="plan__name">{{ P.annual.name }}</h3>
+        <p class="plan__price">{{ P.annual.price | usd }}</p>
+        <p class="plan__per">a year · {{ P.annual.games }} games, one a month</p>
+        <ul class="plan__facts">
+          <li>{{ P.annual.perGame | usd }} per game, billed monthly</li>
+          <li>Rotating audiences: future founders, owners, young professionals, your leadership class, member companies' teams</li>
+          <li>Season leaderboard and a final at your annual meeting</li>
+          <li>Branding, sponsor package, certificates and a report after every game</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="paybox">
+      <p><b>Paid by a sponsor?</b> The games are free for your chamber. You sign the same 12-game agreement: you provide the room, invite members and run registration — the sponsor pays us. <a href="/banks/">How sponsorship works</a></p>
+      <p><b>Banks and sponsors</b> covering several chambers: {{ B.volumePrice | usd }} per chamber a year from {{ B.volumeFrom }} chambers; exclusive territory from {{ B.exclusiveMetroFrom }} chambers in a metro area or {{ B.exclusiveStateFrom }} in a state.</p>
+    </div>
+
+    <h3 class="subhead" id="formats">Three game formats</h3>
+    <p class="mute narrow">Each game is played in one format, like the leagues of our open games. Tickets are per team, and a team can be one person or several.</p>
+    <div class="formats">
+      {% for key, f in pricing.formats %}
+      <article class="format">
+        <h4 class="format__name">{{ f.name }}</h4>
+        <p class="format__who">{{ f.who }}</p>
+        <dl class="format__facts">
+          <div><dt>Game</dt><dd>{{ f.months }} game months · {{ f.hours | hours }}</dd></div>
+          <div><dt>Suggested ticket</dt><dd>{{ f.ticket | usd }} per team</dd></div>
+        </dl>
+        {% if key == 'elite' %}<p class="format__note">+{{ O.elite | usd }} per game on top of your package</p>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+
+    <h3 class="subhead" id="options">Add to any package</h3>
+    <ul class="opts">
+      <li><b>In-person host from our team</b><span>+{{ O.inPerson | usd }} per game, plus travel at cost</span></li>
+      <li><b>Spanish-language game</b><span>+{{ O.spanish | usd }} per game</span></li>
+      <li><b>Elite format</b><span>+{{ O.elite | usd }} per game · 4 hours, extended debrief</span></li>
+      <li><b>Extra game beyond your package</b><span>{{ O.extraGame | usd }} per game</span></li>
+      <li><b>Your sponsor's own host</b><span>{{ O.hostCertification | usd }} per person · certification for bank or sponsor staff</span></li>
+    </ul>
+    <p class="note">By default, participants sit in your room and our host joins by video on your big screen. An in-person host is optional — or your sponsor's certified representative can host the game.</p>
+
+    <p class="docs">
+      <a class="doc" href="/print/brief/{% if state %}?state={{ state.abbr }}{% endif %}">Program brief for your board <small>PDF</small></a>
+      <a class="doc" href="/print/prospectus/{% if state %}?state={{ state.abbr }}{% endif %}">Sponsor prospectus with your chamber's name <small>PDF</small></a>
+    </p>
+  </div>
+</section>

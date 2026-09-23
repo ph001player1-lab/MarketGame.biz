@@ -1,0 +1,56 @@
+---
+layout: layouts/base.njk
+permalink: /privacy/
+pageKind: legal
+hasPrograms: false
+title: "Privacy policy — Market Game"
+description: "How Market Game collects and uses the information you send through marketgame.biz."
+---
+{# Реквизиты компании подставляются из src/_data/site.json → company.
+   Пока они пустые, на странице их нет. До продвижения раздела International
+   в Европе реквизиты нужно заполнить: этого требует GDPR. #}
+<section class="sect">
+  <div class="wrap legal">
+    <span class="eyebrow">Privacy</span>
+    <h1 class="legal__h1">Privacy policy</h1>
+    <p class="legal__date">Last updated: {{ site.privacyUpdated }}</p>
+
+    <h2>Who we are</h2>
+    <p>This website, marketgame.biz, is operated by Market Game{% if site.company.legalName %} ({{ site.company.legalName }}{% if site.company.address %}, {{ site.company.address }}{% endif %}){% endif %}. Market Game offers business simulation programs to chambers of commerce, banks and sponsors.</p>
+
+    <h2>What we collect</h2>
+    <p>We collect only what you send us through a form on this site:</p>
+    <ul>
+      <li>your name, job title, organization, email address and phone number;</li>
+      <li>the states or markets you are interested in, and anything you write in the message field;</li>
+      <li>technical details that come with the form: the page you sent it from, the page that referred you to us and campaign tags in the link.</li>
+    </ul>
+    <p>We do not use advertising or analytics cookies. Your choices on the site — who you are, your state — are kept only in your own browser (local storage) so that the site can remember them. They are not sent to us unless you submit a form.</p>
+
+    <h2>Why we use it</h2>
+    <ul>
+      <li>to reply to your request and arrange a demo game;</li>
+      <li>to prepare and send a proposal you asked for;</li>
+      <li>to keep a record of our business correspondence.</li>
+    </ul>
+    <p>We do not sell your information and do not share it for advertising. We do not pass your contact details to chambers, banks or sponsors without your consent.</p>
+
+    <h2>Where it is stored</h2>
+    <p>Form submissions are stored in Google Sheets (Google LLC). Our team receives a notification about each new request through Telegram. The website itself is hosted on GitHub Pages (GitHub, Inc.), which keeps standard server logs.</p>
+
+    <h2>How long we keep it</h2>
+    <p>We keep requests for as long as we are in contact with you and for up to three years after our last contact, unless you ask us to delete them sooner.</p>
+
+    <h2>Your rights</h2>
+    <p>You can ask us to tell you what information we hold about you, to correct it or to delete it. Residents of California and of other U.S. states with privacy laws, and people in the European Union and the United Kingdom, have these rights under their local law. We will not treat you differently for using them.</p>
+    <p>To make a request, {% if site.contact.email %}write to <a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>{% else %}send us a message through any form on this site and mention "privacy request"{% endif %}.</p>
+
+    <h2>Children</h2>
+    <p>This site is intended for business professionals. We do not knowingly collect information from anyone under 16.</p>
+
+    <h2>Changes</h2>
+    <p>If we change this policy, we will update the date at the top of this page.</p>
+
+    <a class="backlink" href="/">Back to the main page</a>
+  </div>
+</section>
