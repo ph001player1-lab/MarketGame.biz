@@ -262,12 +262,20 @@ branches — добавьте основную ветку.
 Бесплатная переадресация Dynadot: письма на contact@marketgame.biz
 приходят в Gmail.
 
-1. На той же странице DNS Settings, в разделе **Email Settings**, выберите
-   **Email Forwarding** (если такого раздела нет: Action → **Email
-   Settings** → Forwarding Email).
-2. Username: `contact` → Forward to: `ph001player1@gmail.com` → сохранить.
+Домен работает на Dynadot DNS, поэтому переадресация — это ещё одна строка
+в **Domain Record** на странице DNS Settings, а не отдельная страница Email
+Settings (при записях на Dynadot DNS она не действует).
+
+1. Dynadot → DNS Settings для marketgame.biz → в разделе **Domain Record**
+   добавьте строку: Record Type — **Email Forward**, Alias — `contact`,
+   Email — `ph001player1@gmail.com`.
+2. Четыре A-записи и `www` не трогайте → **Save Settings**.
 3. Проверьте письмом **с другого адреса**: письмо от себя самого Gmail
    не покажет — он считает его собственным.
+
+Если письмо вернулось с ошибкой `550 recipient unrecognized` — строки
+Email Forward для этого адреса нет: почтовый сервер Dynadot
+(`parkmail.dynadot.com`) принимает почту только на настроенные адреса.
 
 Отвечать от имени contact@marketgame.biz прямо из Gmail:
 
@@ -279,10 +287,12 @@ branches — добавьте основную ветку.
 3. SMTP-сервер `smtp.gmail.com`, порт `587`, пользователь
    `ph001player1@gmail.com`, пароль — из шага 1, TLS.
 4. Gmail пришлёт код на contact@ — он придёт вам же через переадресацию.
-5. Чтобы письма реже попадали в спам, добавьте в Dynadot запись **TXT**
-   для домена: `v=spf1 include:_spf.google.com ~all`. Если TXT-запись,
-   начинающаяся с `v=spf1`, уже есть — допишите в неё
-   `include:_spf.google.com`, вторую не создавайте.
+5. Чтобы письма реже попадали в спам, в SPF-записи домена должен быть
+   Gmail. Сейчас Dynadot отдаёт `v=spf1 mx ~all`; нужна одна запись
+   `v=spf1 mx include:_spf.google.com ~all`. Если в Domain Record есть TXT,
+   начинающаяся с `v=spf1`, — поправьте её; если нет — добавьте TXT с этим
+   текстом. Двух записей `v=spf1` быть не должно: проверьте после
+   сохранения, что в DNS осталась одна.
 
 Нужен полноценный почтовый ящик — бесплатный тариф Zoho Mail
 (до 5 ящиков на домен), но настройка там дольше.
