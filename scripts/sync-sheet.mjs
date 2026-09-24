@@ -1,18 +1,19 @@
 // Выгрузка базы палат и банков-партнёров из таблицы продаж на сайт.
 //
-// Источник — два листа Google-таблицы продаж, опубликованные как CSV
-// (Файл → Поделиться → Опубликовать в интернете → нужный лист → CSV).
-// На эти листы выводятся ТОЛЬКО открытые поля: контакты, цены и заметки
-// менеджеров на сайт попадать не должны.
+// Источник — два открытых листа таблицы продаж: «Сайт — палаты» и
+// «Сайт — банки». Их отдаёт тот же скрипт Google Apps Script, что принимает
+// заявки (apps-script/Code.gs): адрес берётся из src/_data/site.json →
+// formEndpoint с добавкой ?sheet=chambers или ?sheet=banks. Скрипт отдаёт
+// только открытые колонки — контакты, цены и заметки на сайт не попадают.
 //
-// Адреса листов задаются переменными окружения (в GitHub — секреты):
-//   CHAMBERS_CSV_URL — лист с палатами
-//   BANKS_CSV_URL    — лист с банками-партнёрами
-// Вместо адреса можно указать путь к локальному CSV-файлу — удобно для проверки.
+// Для проверки или другого источника адреса можно задать переменными
+// окружения CHAMBERS_CSV_URL и BANKS_CSV_URL — вместо адреса годится и путь
+// к локальному CSV-файлу.
 //
 // Результат — src/_data/chambers.json и src/_data/banks.json. Файл
 // перезаписывается, только если данные изменились; тогда в GITHUB_OUTPUT
-// пишется changed=true, и сайт пересобирается.
+// пишется changed=true, и сайт пересобирается. Если источник недоступен или
+// вернул не то, прежние данные остаются, а сборка не падает.
 //
 // Колонки листа палат (заголовки по-английски или по-русски, регистр не важен):
 //   State / Штат            — двухбуквенный код: TX, OH, DC
@@ -21,19 +22,19 @@
 //   Website / Сайт
 //   Status / Статус         — Signed / Подписан, остальное считается свободной
 //   Contract date / Дата договора — для выбора Founding Chamber (самый ранний договор)
-//   Public / Публиковать    — Yes / Да: палата согласна на упоминание статуса
+//   Public / Публиковать    — Yes / Да / галочка: палата согласна на упоминание статуса
 //   Sponsor / Спонсор       — банк или спонсор, если платит он
-//   Sponsor public / Публиковать спонсора — Yes / Да
+//   Sponsor public / Публиковать спонсора — Yes / Да / галочка
 //
 // Колонки листа банков:
 //   State / Штат, Bank / Банк, Scope / Территория (State или Metro / Штат или Метро),
-//   Metro / Метро, Exclusive / Эксклюзив (Yes/Да), Active / Активен (Yes/Да),
-//   Public / Публиковать (Yes/Да)
+//   Metro / Метро, Exclusive / Эксклюзив, Active / Активен, Public / Публиковать
 
 import fs from 'node:fs';
 
 const DATA = new URL('../src/_data/', import.meta.url);
 const states = JSON.parse(fs.readFileSync(new URL('states.json', DATA), 'utf8'));
+const site = JSON.parse(fs.readFileSync(new URL('site.json', DATA), 'utf8'));
 const KNOWN = new Set(states.map((s) => s.abbr));
 
 const ALIASES = {
@@ -53,6 +54,7 @@ const ALIASES = {
   active: ['active', 'активен']
 };
 
+// «Да» в таблице: слово, галочка (TRUE) или 1
 const yes = (v) => /^(yes|y|true|1|да|д|\+)$/i.test(String(v || '').trim());
 const signed = (v) => /sign|подпис|active|актив/i.test(String(v || ''));
 
@@ -77,9 +79,15 @@ function parseCsv(text) {
   return rows.filter((r) => r.some((c) => String(c).trim() !== ''));
 }
 
-/** Строки CSV → объекты с нашими именами полей. */
-function records(text) {
-  const [head = [], ...rows] = parseCsv(text.replace(/^﻿/, ''));
+/**
+ * Строки CSV → объекты с нашими именами полей. Если в заголовке нет
+ * обязательных колонок, это не тот лист (или скрипт ещё старой версии
+ * и вернул не CSV) — тогда возвращаем null, и файл на сайте не трогаем.
+ */
+function records(text, required) {
+  // Excel и Google иногда ставят в начало файла невидимую метку BOM
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+  const [head = [], ...rows] = parseCsv(text);
   const index = {};
   head.forEach((h, i) => {
     const key = String(h).trim().toLowerCase();
@@ -87,6 +95,11 @@ function records(text) {
       if (names.includes(key) && !(field in index)) index[field] = i;
     }
   });
+  const missing = required.filter((f) => !(f in index));
+  if (missing.length) {
+    console.warn(`  в ответе нет колонок: ${missing.join(', ')}; начало ответа: ${text.slice(0, 120)}`);
+    return null;
+  }
   return rows.map((r) => {
     const o = {};
     for (const [field, i] of Object.entries(index)) o[field] = String(r[i] ?? '').trim();
@@ -97,7 +110,7 @@ function records(text) {
 async function load(source) {
   if (/^https?:\/\//.test(source)) {
     const res = await fetch(source, { redirect: 'follow' });
-    if (!res.ok) throw new Error(`HTTP ${res.status} for ${source.slice(0, 60)}…`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.text();
   }
   return fs.readFileSync(source, 'utf8');
@@ -111,7 +124,7 @@ function url(v) {
 function buildChambers(rows) {
   const out = {};
   for (const r of rows) {
-    const abbr = r.state.toUpperCase();
+    const abbr = String(r.state || '').toUpperCase();
     if (!KNOWN.has(abbr) || !r.chamber) {
       if (r.chamber || r.state) console.warn(`  пропущена строка: «${r.chamber}» (${r.state})`);
       continue;
@@ -155,11 +168,11 @@ function buildChambers(rows) {
 function buildBanks(rows) {
   const result = {};
   for (const r of rows) {
-    const abbr = r.state.toUpperCase();
+    const abbr = String(r.state || '').toUpperCase();
     if (!KNOWN.has(abbr) || !r.bank || !yes(r.active)) continue;
     const s = (result[abbr] ||= { status: 'partner', name: null, metros: [] });
     const name = yes(r.public) ? r.bank : null;
-    const metro = /metro|метро/i.test(r.scope);
+    const metro = /metro|метро/i.test(r.scope || '');
     if (metro) {
       s.metros.push({ metro: r.metro || null, name, exclusive: yes(r.exclusive) });
     } else {
@@ -171,32 +184,49 @@ function buildBanks(rows) {
 }
 
 /** Пишет файл, только если данные изменились (дата обновления не в счёт). */
-function write(file, states) {
+function write(file, data) {
   const target = new URL(file, DATA);
   const old = fs.existsSync(target) ? JSON.parse(fs.readFileSync(target, 'utf8')) : {};
-  if (JSON.stringify(old.states || {}) === JSON.stringify(states)) {
+  if (JSON.stringify(old.states || {}) === JSON.stringify(data)) {
     console.log(`${file}: без изменений`);
     return false;
   }
-  fs.writeFileSync(target, JSON.stringify({ updated: new Date().toISOString(), states }, null, 2) + '\n');
-  console.log(`${file}: обновлён, штатов с данными — ${Object.keys(states).length}`);
+  fs.writeFileSync(target, JSON.stringify({ updated: new Date().toISOString(), states: data }, null, 2) + '\n');
+  console.log(`${file}: обновлён, штатов с данными — ${Object.keys(data).length}`);
   return true;
 }
 
+/**
+ * Один лист: скачать, проверить, собрать JSON. Любая ошибка — сбой сети,
+ * старая версия скрипта, нет листа — оставляет на сайте прежние данные.
+ */
+async function sync(file, source, required, build) {
+  if (!source) {
+    console.log(`${file}: источник не задан (нет formEndpoint в site.json) — не обновляем`);
+    return false;
+  }
+  try {
+    const rows = records(await load(source), required);
+    if (!rows) {
+      console.warn(`${file}: ответ не похож на нужный лист — прежние данные остаются`);
+      return false;
+    }
+    return write(file, build(rows));
+  } catch (err) {
+    console.warn(`${file}: не удалось получить данные (${err.message}) — прежние данные остаются`);
+    return false;
+  }
+}
+
+const endpoint = site.formEndpoint || '';
+const sources = {
+  chambers: process.env.CHAMBERS_CSV_URL || (endpoint && `${endpoint}?sheet=chambers`),
+  banks: process.env.BANKS_CSV_URL || (endpoint && `${endpoint}?sheet=banks`)
+};
+
 let changed = false;
-const { CHAMBERS_CSV_URL, BANKS_CSV_URL } = process.env;
-
-if (CHAMBERS_CSV_URL) {
-  changed = write('chambers.json', buildChambers(records(await load(CHAMBERS_CSV_URL)))) || changed;
-} else {
-  console.log('CHAMBERS_CSV_URL не задан — список палат не обновляем');
-}
-
-if (BANKS_CSV_URL) {
-  changed = write('banks.json', buildBanks(records(await load(BANKS_CSV_URL)))) || changed;
-} else {
-  console.log('BANKS_CSV_URL не задан — банки не обновляем');
-}
+changed = (await sync('chambers.json', sources.chambers, ['state', 'chamber'], buildChambers)) || changed;
+changed = (await sync('banks.json', sources.banks, ['state', 'bank'], buildBanks)) || changed;
 
 if (process.env.GITHUB_OUTPUT) {
   fs.appendFileSync(process.env.GITHUB_OUTPUT, `changed=${changed}\n`);

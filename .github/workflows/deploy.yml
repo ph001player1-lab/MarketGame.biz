@@ -1,22 +1,21 @@
 # Сборка и публикация marketgame.biz на GitHub Pages.
 #
 # Когда запускается:
-#   - при каждом изменении ветки main;
+#   - при каждом изменении основной ветки репозитория (Settings → General →
+#     Default branch), как бы она ни называлась;
 #   - раз в час — забрать свежие статусы палат и банков из таблицы продаж
-#     (scripts/sync-sheet.mjs). Если в таблице ничего не поменялось,
-#     сайт не пересобирается;
+#     (scripts/sync-sheet.mjs читает их через скрипт Google Apps Script,
+#     адрес — src/_data/site.json → formEndpoint). Если в таблице ничего
+#     не поменялось, сайт не пересобирается;
 #   - вручную: Actions → Build and deploy → Run workflow.
 #
-# Секреты (Settings → Secrets and variables → Actions):
-#   CHAMBERS_CSV_URL — опубликованный CSV листа с палатами
-#   BANKS_CSV_URL    — опубликованный CSV листа с банками
-# Пока секретов нет, сайт просто собирается с текущими данными.
+# Никаких секретов не нужно. Если когда-нибудь понадобится другой источник
+# статусов, его можно задать секретами CHAMBERS_CSV_URL и BANKS_CSV_URL.
 
 name: Build and deploy
 
 on:
   push:
-    branches: [main]
   schedule:
     - cron: '17 * * * *'
   workflow_dispatch:
@@ -32,6 +31,8 @@ concurrency:
 
 jobs:
   build:
+    # Публикуем только основную ветку: изменения в остальных ветках сайт не трогают
+    if: github.event_name != 'push' || github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     outputs:
       publish: ${{ steps.decide.outputs.publish }}
@@ -60,7 +61,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/_data/chambers.json src/_data/banks.json
           git commit -m "Update chambers and banks from the sales sheet"
-          git push
+          git push origin HEAD:${{ github.ref_name }}
 
       - name: Decide whether to publish
         id: decide

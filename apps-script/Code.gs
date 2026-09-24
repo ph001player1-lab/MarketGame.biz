@@ -1,9 +1,13 @@
 /**
  * Market Game (marketgame.biz) — приём заявок на демо-игру.
  *
- * Что делает: принимает заявку с сайта, дописывает строку в Google-таблицу
- * продаж (свой лист для палат, банков и спонсоров) и присылает уведомление
- * в закрытую группу Telegram.
+ * Что делает:
+ *   - принимает заявку с сайта, дописывает строку в Google-таблицу продаж
+ *     (свой лист для палат, банков и спонсоров) и присылает уведомление
+ *     в закрытую группу Telegram;
+ *   - отдаёт сайту два открытых листа — «Сайт — палаты» и «Сайт — банки».
+ *     Из них GitHub раз в час обновляет статусы палат на сайте. Наружу уходят
+ *     только колонки из SITE_SHEETS ниже, даже если в лист добавить другие.
  *
  * Как поставить — подробная инструкция в README, раздел «Заявки». Коротко:
  *   1. В таблице продаж: Расширения → Apps Script.
@@ -15,9 +19,12 @@
  *   4. Развернуть → Новое развёртывание → Веб-приложение,
  *      «Запуск от имени: я», «Доступ: все».
  *   5. Адрес вида .../exec вписать в src/_data/site.json → formEndpoint.
+ *   6. Выбрать наверху функцию checkSetup и нажать «Выполнить»: она проверит
+ *      ключи, бота и группу и создаст все нужные листы, включая «Сайт — палаты»
+ *      и «Сайт — банки».
  *
- * ЕСЛИ ЧТО-ТО НЕ РАБОТАЕТ: выберите наверху функцию checkSetup и нажмите
- * «Выполнить» — она проверит ключи, бота, группу и листы.
+ * После любой правки этого файла: Развернуть → Управление развёртываниями →
+ * карандаш → Версия: новая → Развернуть. Адрес .../exec при этом не меняется.
  *
  * ВАЖНО: токен живёт в свойствах скрипта и на сайт не попадает.
  * Никогда не вписывайте его прямо в этот файл.
@@ -53,6 +60,31 @@ var COLUMNS = {
     ['Страница', 'page'], ['Источник', 'referrer'], ['UTM', 'utm'], ['Статус', 'status']
   ]
 };
+
+// Открытые листы для сайта. Колонки — ровно те, что уходят наружу.
+// Поменяли набор колонок здесь — поменяйте и scripts/sync-sheet.mjs.
+var SITE_SHEETS = {
+  chambers: {
+    name: 'Сайт — палаты',
+    headers: ['Штат', 'Палата', 'Город', 'Сайт', 'Статус', 'Дата договора',
+              'Публиковать', 'Спонсор', 'Публиковать спонсора'],
+    checkboxes: ['Публиковать', 'Публиковать спонсора'],
+    lists: { 'Статус': ['Подписан', 'Свободна'] },
+    dates: ['Дата договора']
+  },
+  banks: {
+    name: 'Сайт — банки',
+    headers: ['Штат', 'Банк', 'Территория', 'Метро', 'Эксклюзив', 'Активен', 'Публиковать'],
+    checkboxes: ['Эксклюзив', 'Активен', 'Публиковать'],
+    lists: { 'Территория': ['Штат', 'Метро'] },
+    dates: []
+  }
+};
+
+var STATE_CODES = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI', 'ID',
+  'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV',
+  'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT',
+  'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
 
 /** Форма шлёт POST. */
 function doPost(e) {
@@ -103,15 +135,88 @@ function doPost(e) {
   }
 }
 
-/** Проверка развёртывания: откройте адрес /exec в браузере. */
-function doGet() {
+/**
+ * GET-запросы:
+ *   .../exec                 — проверка развёртывания (откройте в браузере);
+ *   .../exec?sheet=chambers  — лист «Сайт — палаты» в CSV, его читает GitHub;
+ *   .../exec?sheet=banks     — лист «Сайт — банки» в CSV.
+ */
+function doGet(e) {
+  var which = e && e.parameter && e.parameter.sheet;
+  if (which) {
+    if (!SITE_SHEETS[which]) return ok({ status: 'error', message: 'unknown sheet' });
+    return siteCsv(which);
+  }
   var props = PropertiesService.getScriptProperties();
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
   return ok({
     status: 'ok',
     service: 'marketgame-biz-leads',
     hasToken: !!props.getProperty('BOT_TOKEN'),
-    hasChatId: !!props.getProperty('CHAT_ID')
+    hasChatId: !!props.getProperty('CHAT_ID'),
+    siteSheets: {
+      chambers: !!ss.getSheetByName(SITE_SHEETS.chambers.name),
+      banks: !!ss.getSheetByName(SITE_SHEETS.banks.name)
+    }
   });
+}
+
+/** Открытый лист в CSV — только колонки из SITE_SHEETS, в их порядке. */
+function siteCsv(which) {
+  var def = SITE_SHEETS[which];
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(def.name);
+  if (!sheet) return ok({ status: 'error', message: 'sheet not found: ' + def.name });
+
+  var values = sheet.getDataRange().getValues();
+  var head = (values[0] || []).map(function (h) { return String(h).trim(); });
+  var index = def.headers.map(function (h) { return head.indexOf(h); });
+  var tz = Session.getScriptTimeZone();
+
+  function cell(v) {
+    if (v instanceof Date) v = Utilities.formatDate(v, tz, 'yyyy-MM-dd');
+    v = String(v === null || v === undefined ? '' : v);
+    return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+  }
+
+  var lines = [def.headers.map(cell).join(',')];
+  for (var r = 1; r < values.length; r++) {
+    var row = index.map(function (i) { return i === -1 ? '' : values[r][i]; });
+    if (row.join('').trim() === '' || row.every(function (v) { return v === '' || v === false; })) continue;
+    lines.push(row.map(cell).join(','));
+  }
+  return ContentService.createTextOutput(lines.join('\n')).setMimeType(ContentService.MimeType.CSV);
+}
+
+/**
+ * Создаёт листы «Сайт — палаты» и «Сайт — банки»: заголовки, выпадающие
+ * списки штатов и статусов, галочки «Да/Нет». Существующие листы не трогает.
+ * Запускается из checkSetup, можно и отдельно.
+ */
+function setupSiteSheets() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var made = [];
+  Object.keys(SITE_SHEETS).forEach(function (key) {
+    var def = SITE_SHEETS[key];
+    if (ss.getSheetByName(def.name)) return;
+    var sheet = ss.insertSheet(def.name);
+    var rows = 999;
+    sheet.getRange(1, 1, 1, def.headers.length).setValues([def.headers]).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+
+    function col(name) { return def.headers.indexOf(name) + 1; }
+    function list(values) {
+      return SpreadsheetApp.newDataValidation().requireValueInList(values, true).setAllowInvalid(false).build();
+    }
+    sheet.getRange(2, col('Штат'), rows, 1).setDataValidation(list(STATE_CODES));
+    Object.keys(def.lists).forEach(function (name) {
+      sheet.getRange(2, col(name), rows, 1).setDataValidation(list(def.lists[name]));
+    });
+    def.checkboxes.forEach(function (name) { sheet.getRange(2, col(name), rows, 1).insertCheckboxes(); });
+    def.dates.forEach(function (name) { sheet.getRange(2, col(name), rows, 1).setNumberFormat('yyyy-mm-dd'); });
+    sheet.autoResizeColumns(1, def.headers.length);
+    made.push(def.name);
+  });
+  return made;
 }
 
 function appendLead(row) {
@@ -226,6 +331,11 @@ function checkSetup() {
   say('✓ Сообщение отправлено — проверьте группу');
 
   Object.keys(SHEETS).forEach(function (t) { say('✓ Лист «' + getSheet(t).getName() + '» готов'); });
+  var made = setupSiteSheets();
+  Object.keys(SITE_SHEETS).forEach(function (k) {
+    var name = SITE_SHEETS[k].name;
+    say('✓ Лист «' + name + '» ' + (made.indexOf(name) !== -1 ? 'создан' : 'на месте'));
+  });
   say('');
   say('ВСЁ ГОТОВО. Осталось развернуть: Развернуть → Управление развёртываниями →');
   say('карандаш → Версия: новая → Развернуть.');
